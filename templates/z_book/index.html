@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+</head>
+<body>
+<h1>图书列表</h1>
+
+<ul>
+    {% for book in booklist %}
+    <li>
+        <a href="{% url 'z_book:detail' book.id %}">
+            {{ book.b_title }}
+        </a>
+    </li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>

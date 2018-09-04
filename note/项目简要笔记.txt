@@ -86,3 +86,15 @@ django使用正则表达式匹配请求的url，一旦成功，则调用app的�
     from django.utils import timezone
     from z_book.models import BookInfo,HeroInfo
     from datetime import *
+
+
+7.数据库导入导出
+导出：
+yuyh@ubuntu:~/myGit/mybook/note$ mysqldump -uroot -p my_book > dbmybook.sql
+Enter password: 
+
+导入：
+进入mysql
+mysql> source /bin/xxx/dbmybook.sql
+找文件默认在的当前路径
+/xxx/xx/  是绝对路径

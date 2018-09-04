@@ -9,7 +9,7 @@
 
 <ul>
     {% for hero in book.heroinfo_set.all %}
-        <li>{{ hero.h_name }}---{{ hero.h_content }}</li>
+        <li>{{ hero.h_name }} | {{ hero.gender}} --- {{ hero.h_content }}</li>
     {% endfor %}
 </ul>
 

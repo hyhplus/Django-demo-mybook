@@ -1,0 +1,88 @@
+
+1. 布尔值的显示
+发布性别的显示不是一个直观的结果，可以使用方法进行封装
+    models:
+    def gender(self):
+        if self.hgender:
+            return '男'
+        else:
+            return '女'
+    gender.short_description = '性别'
+
+在admin注册中使用gender代替hgender
+    class HeroInfoAdmin(admin.ModelAdmin):
+        list_display = ['id', 'hname', 'gender', 'hcontent']
+
+
+2. 页面跳转逻辑：
+index.html --> detail.html
+<a href="{% url "detail" book.id %}">
+
+for book   -->  for hero in book
+    a.简单使用{% for book in booklist %}遍历数据
+    b.关联表遍历{% for hero in book.heroinfo_set.all %}
+注意for循环标签的位置，无需遍历的和必须遍历的区分开来
+下拉框遍历注意：name属性必须写在for外面的<select name="">标签中
+
+urlconf包括正则表达式，视图：
+django使用正则表达式匹配请求的url，一旦成功，则调用app的视图
+项目名mybook目录下的urls.py：
+    url(r'^', include('z_book.urls')),
+
+应用z_book目录下新增urls.py：
+    from django.conf.urls import url
+    from z_book import views
+
+    urlpatterns = [
+        url(r'^$', views.test),
+        url(r'^([0-9]+)/$', views.detail, name='detail'),
+        url(r'^index/$', views.index),
+    ]
+
+
+3.url跳转<a href="{% url "detail" book.id %}"><br>
+即跳转到views.detail的页面
+
+
+4.关联表在admin关联注册
+接下来实现关联注册
+    from django.contrib import admin
+    from .models import BookInfo, HeroInfo
+
+    class HeroInfoline(admin.StackedInline):
+        model = HeroInfo
+        extra = 2  #这个是什么意思？？
+
+    class BookInfoAdmin(admin.ModelAdmin):
+        inlines = [HeroInfoInline]
+
+    # 在这里只需注册表bookinfo,关联表heroinfo与这个表已经建立关联
+    # admin后台管理只需对一个整体进行管理
+    # 添加和删除都是级联添加，级联删除
+    # shell或者sql删除必须先删除建立外键的表，这里是先删除英雄表，再删除书表
+    admin.site.register(BookInfo, BookInfoAdmin)
+
+    可以将内嵌的方式改为表格：
+    # class HeroInfoInline(admin.TabularInline)
+
+
+5.去除模板的硬编码
+在index.html模板中，超链接是硬编码的，此时的请求地址为“127.0.0.1/1/”
+    <a href="{{book.id}}">
+看如下情况：将urlconf中详细页改为如下，链接就找不到了
+    url(r'^book/([0-9]+)/$', views.detail),
+此时的请求地址应该为“127.0.0.1/book/1/”
+问题总结：如果在模板中地址硬编码，将来urlconf修改后，地址将失效
+解决：使用命名的url设置超链接
+    # 修改test1/urls.py文件，在include中设置namespace
+    #       url(r'^admin/', include(admin.site.urls, namespace='booktest')),
+修改booktest/urls.py文件，设置name
+    url(r'^book/([0-9]+)/$', views.detail, name="detail"),
+修改index.html模板中的链接
+    <a href="{%url 'detail' book.id%}">
+
+
+6. python3 manage.py shell导包
+    from django.utils import timezone
+    from z_book.models import BookInfo,HeroInfo
+    from datetime import *

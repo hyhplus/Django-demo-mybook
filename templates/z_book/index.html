@@ -10,7 +10,7 @@
 <ul>
     {% for book in booklist %}
     <li>
-        <a href="{% url 'z_book:detail' book.id %}">
+        <a href="{% url "detail" book.id %}">
             {{ book.b_title }}
         </a>
     </li>

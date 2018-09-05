@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import BookInfo, HeroInfo
+from .models import BookInfo, HeroInfo, AreaInfo
 
 # Register your models here.
 # admin.site.register(BookInfo)
 # admin.site.register(HeroInfo)
+admin.site.register(AreaInfo)
 
 class HeroInfoInline(admin.StackedInline):
     model = HeroInfo

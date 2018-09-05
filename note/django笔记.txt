@@ -72,12 +72,16 @@ django使用正则表达式匹配请求的url，一旦成功，则调用app的�
 看如下情况：将urlconf中详细页改为如下，链接就找不到了
     url(r'^book/([0-9]+)/$', views.detail),
 此时的请求地址应该为“127.0.0.1/book/1/”
+
 问题总结：如果在模板中地址硬编码，将来urlconf修改后，地址将失效
+
 解决：使用命名的url设置超链接
     # 修改test1/urls.py文件，在include中设置namespace
-    #       url(r'^admin/', include(admin.site.urls, namespace='booktest')),
+    #    url(r'^admin/', include(admin.site.urls, namespace='booktest')),
+
 修改booktest/urls.py文件，设置name
     url(r'^book/([0-9]+)/$', views.detail, name="detail"),
+
 修改index.html模板中的链接
     <a href="{%url 'detail' book.id%}">
 
@@ -96,5 +100,5 @@ Enter password:
 导入：
 进入mysql
 mysql> source /bin/xxx/dbmybook.sql
-找文件默认在的当前路径
-/xxx/xx/  是绝对路径
+找文件默认在   当前路径
+/xxx/xx/是   绝对路径

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>POST-1</title>
+</head>
+<body>
+
+<form method="post" action="/post2/">
+    {% csrf_token %}
+    姓名: <input type="text" name="uname"/><br>
+    密码: <input type="password" name="upwd"/><br>
+    性别: <input type="radio" name="ugender" value="male"/>男
+         <input type="radio" name="ugender" value="female"/>女<br>
+    爱好: <input type="checkbox" name="uhobby" value="电影">电影
+          <input type="checkbox" name="uhobby" value="喝酒">喝酒
+          <input type="checkbox" name="uhobby" value="爬山">爬山<br>
+    <input type="submit" value="提交"/>
+</form>
+
+</body>
+</html>

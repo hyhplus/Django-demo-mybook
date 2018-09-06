@@ -15,6 +15,13 @@ urlpatterns = [
     url(r'^post1/$', views.postTest1),
     url(r'^post2/$', views.postTest2),
 
-    url(r'^cookie/$', views.cookie),
+    #url(r'^cookie/$', views.cookie),
+
+    url(r'^polls1/$', views.indexhttp),
+
+    url(r'^json/$', views.jsonIndex),
+
+    url(r'^reverse/$', views.reverse1),
+    url(r'^reverse/([0-9]+)/$', views.reverse2, name='reverse2')
 
 ]

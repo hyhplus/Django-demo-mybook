@@ -1,0 +1,45 @@
+{%extends 'base.html'%}
+
+{%block content%}
+首页内容
+
+<!--<script type="text/javascript" src="/static/js/jquery-1.12.4.min.js"></script>-->
+<!--<script type="text/javascript">-->
+    <!--$(function(){-->
+        <!--$('#verifycodeChange').css('cursor', 'pointer').click(function(){-->
+            <!--$('#verifycode').attr('src', $('#verifycode').attr('str')+1)-->
+        <!--});-->
+    <!--});-->
+<!--</script>-->
+
+<form method="post" action="/goods/vhandle/" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="text" name="content">
+
+    <span>验证码:</span>
+    <input id="vcode" name="vc" type="text" placeholder="请输入验证码"/>
+    <img id="verifycode" src="/static/images/vcode.jpg"/>
+    <span id="codes"></span>
+
+    <a href="#" id="verifycodeChange" onclick="changecode()">看不清,换一个</a>
+    <br/>
+    <input type="submit" value="提交">
+</form>
+
+    <script>
+            changecode()
+            function changecode(){
+                var node=document.getElementById("verifycode");
+                node.src="/goods/v/?version="+Math.random()
+                var xhr=new XMLHttpRequest()
+                xhr.open('GET','http://localhost:8000/goods/getcode/',true)
+                xhr.send()
+                xhr.onreadystatechange=function(){
+                    if(xhr.status=200 && xhr.readyState==4){
+                        console.log(xhr.responseText)
+                        document.getElementById("codes").value=xhr.responseText
+                    }
+                }
+            }
+    </script>
+{%endblock%}

@@ -1,0 +1,4 @@
+# 验证码      http://localhost:8000/goods/getcode/
+# 对应的urls: urls_goods           http://localhost:8000/goods/#
+# 前端页面:   temtest/index.html
+# 逻辑层:     user/viewsUtil.py

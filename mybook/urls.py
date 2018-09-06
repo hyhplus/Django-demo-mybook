@@ -23,4 +23,6 @@ urlpatterns = [
     #url(r'^admin/', include(admin.site.urls, name='z_book')),
 
     url(r'^', include('z_book.urls')),
+    url(r'^user/', include('user.urls')),
+    url(r'^goods/', include('user.urls_goods')),
 ]

@@ -1,5 +1,7 @@
 from django.shortcuts import render, reverse, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
+from user.models import Area
+
 # Create your views here.
 def test(request):
     return HttpResponse('<h1>test u</h1>')
@@ -22,3 +24,34 @@ def login_handle(request):
 def logout(request):
     request.session.flush()
     return redirect('/user/index/')
+
+
+# ----------------  Ajax异步实现下拉框多级联动  -----------------------
+
+def ajaxIndex(request):
+    return render(request, 'user/ajaxIndex.html')
+
+
+def getArea1(request):
+    list = Area.objects.filter(aPArea__isnull=True)
+    list2 = []
+    for a in list:
+        list2.append([a.aid, a.title])
+    return JsonResponse({'data' : list2})
+
+
+def getArea2(request, pid):
+    list = Area.objects.filter(aPArea_id=pid)
+    list2 = []
+    for a in list:
+        list2.append({'id':a.aid, 'title':a.title})
+    return JsonResponse({'data': list2})
+
+
+
+#----------------- 缓存 没实现?? ------------------------
+from django.views.decorators.cache import cache_page
+
+@cache_page(60 * 5)
+def cacheIndex(request):
+    return HttpResponse('hello1')

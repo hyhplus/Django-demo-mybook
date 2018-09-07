@@ -1,4 +1,86 @@
+1. 验证码使用:
+
 # 验证码      http://localhost:8000/goods/getcode/
 # 对应的urls: urls_goods           http://localhost:8000/goods/#
 # 前端页面:   temtest/index.html
 # 逻辑层:     user/viewsUtil.py
+
+
+
+2. session状态保持
+
+http协议是无状态的: 每次请求都是一次新的请求,不会记得之前通信的状态
+客户端与服务端的一次通话,就是一次会话
+存储方式: cookie session(会话一般指session对象)
+
+使用cookie, 数据存储在客户端
+使用session, 数据存在客户端, 在客户端cookie中存储session_id
+
+状态保持的目的是在一段时间内跟踪请求者的状态,可以实现跨页面访问当前请求者的数据
+注意: 不同的请求者之间不会共享这个数据, 与请求值一一对应
+
+
+
+3. 启用session:
+settings中加app: 'django.contrib.sessions',
+加中间件: 'django.contrib.sessions.middleware.SessionMiddleware',
+
+
+4. 使用session
+启用会话后,每个HttpRequest对象将具有一个session属性,它是一个类字典对象
+get(key, default=None): 根据键获取会话的值
+clear(): 清除所有会话
+flush(): 删除当前的会话数据并删除会话的Cookie
+del request.session['member_id']: 删除会话
+
+views:
+# 将用户输入的用户名保存到session的username字段中
+request.session['username'] = request.POST['username']
+
+
+5. 会话过期时间
+set_expiry(value): 设置会话的超时时间
+如果没有指定, 则两周之后过期
+如果value是一个整数, 会话将在 values秒 没有活动后过期
+如果value为0, 则用户会话的Cookie将在用户的浏览器关闭时过期
+如果value为None, 那么会话永不过期
+
+views.py:
+# request.session.set_expiry(10)
+# request.session.set_expiry(timedelta(day=5)) #5天后过期
+
+
+6. 存储session
+使用存储会话的方式, 可以使用settings.py的SESSION_ENGINE项指定
+
+基于数据库的会话:
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+基于缓存的会话: 只存在本地内存中,丢失不能找回,读写速度更快
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+两者同时使用:
+SESSION_ENGINE = 'django.contrib.sessions.backends.cached_db'
+
+
+7. 使用Redis缓存session
+会话还支持文件,纯cookie,Memcached,Redis等方式存储
+
+redis:
+pip install django-redis-sessions
+
+修改settings, 添加:
+SESSION_ENGINE = 'redis_sessions.session'
+SESSION_REDIS_HOST = 'localhost'
+SESSION_REDIS_PORT = 6379
+SESSION_REDIS_DB = 0
+SESSION_REDIS_PASSWORD = ''
+SESSION_REDIS_PREFIX = 'SESSION'
+
+管理redis的命令:
+启动: sudo redis-server /etc/redis/redis.conf
+停止: sudo redis-server stop
+重启: sudo redis-server restart
+
+redis-cli: 使用客户端连接服务器
+keys *:    查看所有的键
+get name:  获取指定的键
+del name:  删除指定名称的键

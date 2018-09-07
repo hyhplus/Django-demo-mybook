@@ -1,0 +1,90 @@
+分页实现的逻辑:
+views:
+from django.core.paginator import Paginator     #注意导Paginator包
+def pageTest(request, pIndex):
+    list = Bookinfo.books.filter(b_title__isnull=False)     # list集合, 用于遍历对象
+    p = Paginator(list, 10)                     # 一页中最多的对象数目为10
+    if pIndex == '':                            # 默认是第一页为当前页
+        pIndex = '1'
+    pIndex = int(pIndex)
+    list2 = p.page(pIndex)                      # 当前页的对象数目
+    plist = p.page_range                        # 页数, 显示页码
+    content = {'list':list2, 'plist':plist, 'pIndex':pIndex}
+    return render(request, 'z_book/pageTest.html', content)
+
+###  'list':list2       遍历当前页的对象, 查询上下页
+###  'pIndex':pIndex    显示当前所在页
+###  'plist':plist      遍历所有页码
+
+--------------------------------------------------------------------
+
+urls:
+url(r'^page(?P<pIndex>[0-9]*)/$', views.pageTest, name='pageTest')
+
+--------------------------------------------------------------------
+
+html-->body:
+
+<ul>
+    {% for book in list %}          <!-- 遍历当前页存在的所有对象 -->
+    <li>
+        {{ book.id }} -- -- {{ book.b_title }}
+    </li>
+    {% endfor %}
+</ul>
+
+当前页:{{pIndex}} &nbsp; &nbsp;
+
+
+{% if list.has_previous %}          <!-- 上一页存在 -->
+    <a href="/pag{{list.previous_page_number}}/">上一页</a>
+{% endif %}
+ &nbsp;
+
+
+{% for pindex in plist %}           <!-- 按照页码,遍历出所有的页数 -->
+    <a href="/pag{{pindex}}/">{{pindex}}</a> &nbsp;
+{% endfor %}
+
+
+{% if list.has_next %}              <!-- 下一页存在 -->
+    <a href="/pag{{list.next_page_number}}/">下一页</a>
+{% endif %}
+
+--------------------------------------------------------------------
+
+效果如下:
+
+    1 -- -- 射雕英雄传
+    2 -- -- 三国演义
+    3 -- -- 张飞
+    4 -- -- 张飞
+    5 -- -- 三国演义
+    6 -- -- 三国演义
+    7 -- -- 陈情传
+    8 -- -- 三国演义
+    9 -- -- 陈情传
+    10 -- -- 陈情传
+
+当前页:1       1   2   下一页
+
+------>>......<<.......
+
+
+    11 -- -- 陈情传
+    12 -- -- 陈情传
+
+当前页:2     上一页   1   2
+
+------>>......<<.......
+
+设置一页显示的对象数目为5
+views: p = Paginator(list, 5)
+
+    6 -- -- 三国演义
+    7 -- -- 陈情传
+    8 -- -- 三国演义
+    9 -- -- 陈情传
+    10 -- -- 陈情传
+
+当前页:2     上一页   1   2   3   下一页

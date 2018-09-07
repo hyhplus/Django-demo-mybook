@@ -6,6 +6,8 @@ urlpatterns = [
     url(r'^([0-9]+)/$', views.detail, name='detail'),
     url(r'^index/$', views.index),
 
+    url(r'pag(?P<pIndex>[0-9]*)/$', views.pagTest, name='pagTest'),
+
     url(r'^area/([0-9]+)/$', views.area, name='area'),
 
     url(r'^get1/$', views.getTest1),

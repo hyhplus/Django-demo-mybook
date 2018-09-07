@@ -4,6 +4,7 @@ from django.template import RequestContext, loader
 from django.urls import reverse
 import random
 from .models import BookInfo, AreaInfo
+from django.core.paginator import Paginator
 
 # Create your views here.
 def test(request):
@@ -30,6 +31,19 @@ def index(request):
     #booklist = BookInfo.books.all()
     booklist = get_list_or_404(BookInfo, pk__lt=3)
     return render(request, 'z_book/index.html', {'booklist':booklist})
+
+
+''' 分页测试 '''
+def pagTest(request, pIndex):
+    list = BookInfo.books.all()
+    p = Paginator(list, 5)
+    if pIndex == '':
+        pIndex = '1'
+    pIndex = int(pIndex)
+
+    list2 = p.page(pIndex)
+    plist = p.page_range
+    return render(request, 'z_book/pageTest.html', {'list':list2,'plist':plist,'pIndex':pIndex})
 
 
 ''' 地址 '''
@@ -65,9 +79,6 @@ def postTest2(request):
     name = request.POST['uname']
     upwd = request.POST['upwd']
     gender = request.POST['ugender']
-    # name = request.POST.get('uname')
-    # upwd = request.POST.get('upwd')
-    # gender = request.POST.get('ugender')
 
     hobby = request.POST.getlist('uhobby')
     context = {'uname':name, 'upwd':upwd, 'ugender':gender, 'uhobby':hobby}
@@ -87,9 +98,7 @@ def indexhttp(request):
     context = {'h1' : 'hello'}
     content = loader.render_to_string('polls/index.html', context, request)
     hp = HttpResponse(content)
-
     hp.set_cookie('user', 'cookie')
-
 
     hp.write('<h1>'+'write'+'</h1>')
 

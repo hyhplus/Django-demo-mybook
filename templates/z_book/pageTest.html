@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>分页</title>
+</head>
+<body>
+
+<ul>
+    {% for book in list %}
+    <li>
+        {{ book.id }} -- -- {{ book.b_title }}
+    </li>
+    {% endfor %}
+</ul>
+
+当前页:{{pIndex}} &nbsp; &nbsp;
+
+
+{% if list.has_previous %}
+    <a href="/pag{{list.previous_page_number}}/">上一页</a>
+{% endif %}
+ &nbsp;
+
+
+{% for pindex in plist %}
+    <a href="/pag{{pindex}}/">{{pindex}}</a> &nbsp;
+{% endfor %}
+
+
+{% if list.has_next %}
+    <a href="/pag{{list.next_page_number}}/">下一页</a>
+{% endif %}
+
+
+</body>
+</html>

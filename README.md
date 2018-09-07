@@ -13,3 +13,5 @@ django demo
 
 5.url跳转<a href="{% url "detail" book.id %}"><br>
 即跳转到views.detail的页面
+
+https://blog.csdn.net/python_cream/article/details/79666135

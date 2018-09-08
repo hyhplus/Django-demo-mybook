@@ -49,9 +49,9 @@ def getArea2(request, pid):
 
 
 
-#----------------- 缓存 没实现?? ------------------------
+#----------------- 缓存 F12-->network-->header ----------------
 from django.views.decorators.cache import cache_page
 
-@cache_page(60 * 5)
+@cache_page(60 * 5)   # Cache-Control: max-age=300
 def cacheIndex(request):
     return HttpResponse('hello1')
